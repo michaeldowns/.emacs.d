@@ -1,5 +1,7 @@
 ;; Run private routines
-(load-file "~/.emacs.d/init_private.el")
+(let ((path "~/.emacs.d/init_private.el"))
+  (if (and (file-exists-p path) (file-readable-p path))
+      (load-file path)))
 
 ;; Generated commands
 (custom-set-variables
