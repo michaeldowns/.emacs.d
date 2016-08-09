@@ -43,8 +43,8 @@
 (setq exec-path (append exec-path '("/usr/local/homebrew/bin")))
 
 ;; add python executables to environment
-(setenv "PATH" (concat (getenv "PATH") ":/Users/msdowns/Library/python/2.7/bin"))
-(setq exec-path (append exec-path '("/Users/msdowns/Library/python/2.7/bin")))
+(setenv "PATH" (concat (getenv "PATH") ":~/Library/python/2.7/bin"))
+(setq exec-path (append exec-path '("~/Library/python/2.7/bin")))
 
 ;; hide startup message
 (setq inhibit-startup-message t)
