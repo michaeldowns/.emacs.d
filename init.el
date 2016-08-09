@@ -225,4 +225,8 @@
                               (sql-highlight-postgres-keywords))))
 
 
+;; Magit
+;; --------------------------------------
 
+;; Bind magit to C-x g
+(global-set-key "\C-xg" 'magit-status)
