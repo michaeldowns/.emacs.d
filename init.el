@@ -3,6 +3,22 @@
   (if (and (file-exists-p path) (file-readable-p path))
       (load-file path)))
 
+;; Install packages if they're not already
+
+(when (>= emacs-major-version 24)
+  (require 'package)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+  (package-initialize)
+
+  (setq package-list '(paradox neotree))
+
+  (unless package-archive-contents
+    (package-refresh-contents))
+
+  (dolist (package package-list)
+    (unless (package-installed-p package)
+      (package-install package))))
+
 ;; Generated commands
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -64,12 +80,7 @@
   (interactive "nTransparency Value 0 - 100 opaque:")
   (set-frame-parameter (selected-frame) 'alpha value))
 
-;; Package management MELPA-Stable
-(when (>= emacs-major-version 24)
-  (require 'package)
-  (package-initialize)
-  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
-  )
+
 (put 'erase-buffer 'disabled nil)
 
 (put 'upcase-region 'disabled nil)
