@@ -1,16 +1,24 @@
+;; init.el --- Emacs configuration
+
 ;; Run private routines
+;; --------------------------------------
+
 (let ((path "~/.emacs.d/init_private.el"))
   (if (and (file-exists-p path) (file-readable-p path))
       (load-file path)))
 
 ;; Install packages if they're not already
+;; --------------------------------------
 
 (when (>= emacs-major-version 24)
   (require 'package)
   (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
   (package-initialize)
 
-  (setq package-list '(paradox neotree buffer-move magit))
+  (setq package-list '(paradox neotree buffer-move magit web-mode jinja2-mode
+			       js2-mode flycheck json-mode auto-complete ac-js2
+			       js2-refactor elpy py-autopep8 expand-region
+			       multiple-cursors))
 
   (unless package-archive-contents
     (package-refresh-contents))
@@ -19,22 +27,27 @@
     (unless (package-installed-p package)
       (package-install package))))
 
-;; Generated commands
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(org-agenda-files (quote ("~/.notes.org")))
- '(paradox-github-token t)
- '(send-mail-function (quote mailclient-send-it)))
+;; Global settings
+;; --------------------------------------
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "Black" :foreground "White" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "apple" :family "Monaco")))))
+;; append /usr/local/bin to environment
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+(setq exec-path (append exec-path '("/usr/local/bin")))
+
+;; append /usr/texbin to environment
+(setenv "PATH" (concat (getenv "PATH") ":/usr/texbin"))
+(setq exec-path (append exec-path '("/usr/texbin")))
+
+;; add brew to environment
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/homebrew/bin"))
+(setq exec-path (append exec-path '("/usr/local/homebrew/bin")))
+
+;; add python executables to environment
+(setenv "PATH" (concat (getenv "PATH") ":/Users/msdowns/Library/python/2.7/bin"))
+(setq exec-path (append exec-path '("/Users/msdowns/Library/python/2.7/bin")))
+
+;; hide startup message
+(setq inhibit-startup-message t)
 
 ;; use ssh
 (setq tramp-default-method "ssh")
@@ -74,24 +87,17 @@
 ;; autopairing quotations etc.
 (electric-pair-mode 1) ;; to enable in all buffers
 
-;; Set transparency of emacs
-(defun transparency (value)
-  "Sets the transparency of the frame window. 0=transparent/100=opaque"
-  (interactive "nTransparency Value 0 - 100 opaque:")
-  (set-frame-parameter (selected-frame) 'alpha value))
-
-
 (put 'erase-buffer 'disabled nil)
 
 (put 'upcase-region 'disabled nil)
-
-;; Default browser
-(setq browse-url-browser-function 'browse-url-default-macosx-browser)
 
 ;; Disable echoing shell
 (defun my-comint-init ()
   (setq comint-process-echoes t))
 (add-hook 'comint-mode-hook 'my-comint-init)
+
+;; Default browser
+(setq browse-url-browser-function 'browse-url-default-macosx-browser)
 
 ;; Highlight the line after eighty characters
 (require 'whitespace)
@@ -99,19 +105,100 @@
 (setq whitespace-style '(face lines-tail))
 (add-hook 'prog-mode-hook 'whitespace-mode)
 
-;; append /usr/local/bin to environment
-(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
-(setq exec-path (append exec-path '("/usr/local/bin")))
+;; buffer-move commands
+(global-set-key (kbd "<M-S-up>")     'buf-move-up)
+(global-set-key (kbd "<M-S-down>")   'buf-move-down)
+(global-set-key (kbd "<M-S-left>")   'buf-move-left)
+(global-set-key (kbd "<M-S-right>")  'buf-move-right)
 
-;; append /usr/texbin to environment
-(setenv "PATH" (concat (getenv "PATH") ":/usr/texbin"))
-(setq exec-path (append exec-path '("/usr/texbin")))
+;; Enable windmove keybindings
+;; Navigate to different windows by holding shift and using arrow keys
+(windmove-default-keybindings)
 
-;; add brew to environment
-(setenv "PATH" (concat (getenv "PATH") ":/usr/local/homebrew/bin"))
-(setq exec-path (append exec-path '("/usr/local/homebrew/bin")))
+;; FLycheck
+;; --------------------------------------
 
-;; orgmode settings
+(require 'flycheck)
+
+;; Disable jshint
+(setq-default flycheck-disabled-checkers
+	      (append flycheck-disabled-checkers
+		      '(javascript-jshint)))
+
+;; use eslint with web-mode for jsx files
+(flycheck-add-mode 'javascript-eslint 'js2-mode)
+
+;; customize flycheck temp file prefix
+(setq-default flycheck-temp-prefix ".flycheck")
+
+;; disable json-jsonlist checking for json files
+(setq-default flycheck-disabled-checkers
+	      (append flycheck-disabled-checkers
+		      '(json-jsonlist)))
+
+
+;; JavaScript / Web
+;; --------------------------------------
+
+;; js2-mode
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+
+;; autocomplete javascript
+(add-hook 'js2-mode-hook 'auto-complete-mode)
+(add-hook 'js2-mode-hook 'ac-js2-mode)
+
+;; enable flycheck
+(add-hook 'js2-mode-hook 'flycheck-mode)
+
+;; activate jinja2 when editing html
+(add-to-list 'auto-mode-alist '("\\.html\\'" . jinja2-mode))
+
+;; Python
+;; --------------------------------------
+
+;; elpy
+(elpy-enable)
+
+;; autopep8
+(require 'py-autopep8)
+(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+
+;; elpy flycheck
+(setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+(add-hook 'elpy-mode-hook 'flycheck-mode)
+
+
+;; Generated commands
+;; --------------------------------------
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-agenda-files (quote ("~/.notes.org")))
+ '(paradox-github-token t)
+ '(send-mail-function (quote mailclient-send-it)))
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:inherit nil :stipple nil :background "Black" :foreground "White" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "apple" :family "Monaco")))))
+
+;; Utility functions
+;; --------------------------------------
+
+;; Set transparency of emacs
+(defun transparency (value)
+  "Sets the transparency of the frame window. 0=transparent/100=opaque"
+  (interactive "nTransparency Value 0 - 100 opaque:")
+  (set-frame-parameter (selected-frame) 'alpha value))
+
+
+;; Org mode
+;; --------------------------------------
+
 ;; add additional workflow state
 (setq org-todo-keywords
       '((sequence "TODO" "OPTIONAL" "|" "DONE")))
@@ -125,28 +212,17 @@
 ;; org mode syntax highlighting
 (setq org-src-fontify-natively t)
 
-;; activate jinja2 when editing html
-(add-to-list 'auto-mode-alist '("\\.html\\'" . jinja2-mode))
-
 ;; Record time when orgmode todo changed to done
 (setq org-log-done 'time)
 
-;; buffer-move commands
-(global-set-key (kbd "<M-S-up>")     'buf-move-up)
-(global-set-key (kbd "<M-S-down>")   'buf-move-down)
-(global-set-key (kbd "<M-S-left>")   'buf-move-left)
-(global-set-key (kbd "<M-S-right>")  'buf-move-right)
+;; SQL
+;; --------------------------------------
 
-;; Enable windmove keybindings
-;; Navigate to different windows by holding shift and using arrow keys
-(windmove-default-keybindings)
-
-;; Postgres syntax highlighting\
+;; Postgres syntax highlighting
 (add-to-list 'auto-mode-alist
              '("\\.psql$" . (lambda ()
                               (sql-mode)
                               (sql-highlight-postgres-keywords))))
 
-;; js2-mode
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+
 
