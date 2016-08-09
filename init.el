@@ -10,7 +10,7 @@
   (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
   (package-initialize)
 
-  (setq package-list '(paradox neotree))
+  (setq package-list '(paradox neotree buffer-move magit))
 
   (unless package-archive-contents
     (package-refresh-contents))
