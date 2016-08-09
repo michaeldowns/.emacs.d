@@ -117,16 +117,7 @@
 
 ;; FLycheck
 ;; --------------------------------------
-
 (require 'flycheck)
-
-;; Disable jshint
-(setq-default flycheck-disabled-checkers
-	      (append flycheck-disabled-checkers
-		      '(javascript-jshint)))
-
-;; use eslint with web-mode for jsx files
-(flycheck-add-mode 'javascript-eslint 'js2-mode)
 
 ;; customize flycheck temp file prefix
 (setq-default flycheck-temp-prefix ".flycheck")
@@ -139,6 +130,14 @@
 
 ;; JavaScript / Web
 ;; --------------------------------------
+
+;; Disable jshint
+(setq-default flycheck-disabled-checkers
+	      (append flycheck-disabled-checkers
+		      '(javascript-jshint)))
+
+;; use eslint with web-mode for jsx files
+(flycheck-add-mode 'javascript-eslint 'js2-mode)
 
 ;; js2-mode
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
