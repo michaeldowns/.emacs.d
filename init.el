@@ -18,7 +18,7 @@
   (setq package-list '(paradox neotree buffer-move magit web-mode jinja2-mode
 			       js2-mode flycheck json-mode auto-complete ac-js2
 			       js2-refactor elpy py-autopep8 expand-region
-			       multiple-cursors))
+			       multiple-cursors markdown-mode))
 
   (unless package-archive-contents
     (package-refresh-contents))
