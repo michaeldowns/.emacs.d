@@ -18,7 +18,7 @@
   (setq package-list '(paradox neotree buffer-move magit web-mode jinja2-mode
 			       js2-mode flycheck json-mode js2-refactor elpy
 			       py-autopep8 expand-region multiple-cursors
-			       markdown-mode tern company-tern))
+			       markdown-mode tern company-tern which-key))
 
   (unless package-archive-contents
     (package-refresh-contents))
@@ -59,6 +59,7 @@
 ;; disable the toolbar and scrollbar
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
+(menu-bar-mode -1)
 
 ;; line numbers
 (global-linum-mode 1)
@@ -256,3 +257,8 @@
 ;; --------------------------------------
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
+
+;; which-key
+;; --------------------------------------
+(which-key-mode)
+(which-key-setup-side-window-right)
