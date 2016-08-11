@@ -18,7 +18,7 @@
   (setq package-list '(paradox neotree buffer-move magit web-mode jinja2-mode
 			       js2-mode flycheck json-mode auto-complete ac-js2
 			       js2-refactor elpy py-autopep8 expand-region
-			       multiple-cursors markdown-mode))
+			       multiple-cursors markdown-mode tern company-tern))
 
   (unless package-archive-contents
     (package-refresh-contents))
@@ -131,7 +131,7 @@
 ;; JavaScript / Web
 ;; --------------------------------------
 
-;; Disable jshint
+;; disable jshint in flycheck
 (setq-default flycheck-disabled-checkers
 	      (append flycheck-disabled-checkers
 		      '(javascript-jshint)))
@@ -142,15 +142,26 @@
 ;; js2-mode
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 
-;; autocomplete javascript
-(add-hook 'js2-mode-hook 'auto-complete-mode)
-(add-hook 'js2-mode-hook 'ac-js2-mode)
-
 ;; enable flycheck
 (add-hook 'js2-mode-hook 'flycheck-mode)
 
 ;; activate jinja2 when editing html
 (add-to-list 'auto-mode-alist '("\\.html\\'" . jinja2-mode))
+
+;; use two indents
+(setq
+ js-indent-level 2
+ js2-basic-offset 2
+ js2-mode-show-parse-errors nil
+ js2-mode-show-strict-warnings)
+
+(defun my-javascript-mode-hook ()
+  (js2-refactor-mode 1)
+  (tern-mode 1)
+  (company-mode 1)
+  (add-to-list 'company-backends 'company-tern))
+
+(add-hook 'js2-mode-hook 'my-javascript-mode-hook)
 
 ;; Python
 ;; --------------------------------------
@@ -238,3 +249,8 @@
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+
+;; expand-region
+;; --------------------------------------
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
