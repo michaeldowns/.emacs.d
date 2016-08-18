@@ -19,8 +19,8 @@
 ;; Run private routines
 ;; --------------------------------------
 (let ((path "~/.emacs.d/init_private.el"))
-  (if (and (file-exists-p path) (file-readable-p path))
-      (load-file path)))
+ (if (and (file-exists-p path) (file-readable-p path))
+     (load-file path)))
 
 ;; Load settings files
 ;; --------------------------------------
@@ -35,6 +35,7 @@
 (require 'my-projects)
 (require 'my-directory)
 (require 'my-org)
+(require 'my-web)
 (require 'language-javascript)
 (require 'language-python)
 (require 'language-sql)
@@ -54,8 +55,8 @@
 ;; --------------------------------------
 (exec-path-from-shell-initialize)
 
-(require 'super-save)
-(super-save-initialize)
+;;(require 'super-save)
+;;(super-save-initialize)
 
 (global-hl-line-mode 1)
 
@@ -63,12 +64,15 @@
 
 ;; Global settings
 ;; --------------------------------------
+
+(setq ring-bell-function 'ignore)
+
 (setq-default
  which-key-idle-delay 0.2)
 
-(scroll-bar-mode 0)
-(tool-bar-mode 0)
-(menu-bar-mode 0)
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+(menu-bar-mode -1)
 
 (setq-default
  inhibit-startup-screen t
