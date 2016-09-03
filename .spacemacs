@@ -41,7 +41,10 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(
+                                      diff-hl
+                                      jinja2-mode
+                                      )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -241,7 +244,11 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-  )
+
+  ;; things like proxy settings
+  (let ((path "~/.emacs.d/init_private.el"))
+    (if (and (file-exists-p path) (file-readable-p path))
+        (load-file path))))
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -250,12 +257,6 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-
-  ;; Run private routines
-  ;; --------------------------------------
-  (let ((path (concat user-emacs-directory "init_private.el")))
-        (if (and (file-exists-p path) (file-readable-p path))
-            (load-file path)))
 
   (setq-default
    auto-save-default nil)
@@ -299,7 +300,10 @@ you should place your code here."
   (global-set-key (kbd "C->") 'mc/mark-next-like-this)
   (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 
-  (global-set-key (kbd "C-<tab>") 'yas-expand))
+  (global-set-key (kbd "C-<tab>") 'yas-expand)
+ 
+  ;; Show 80-column marker
+  (add-hook 'prog-mode-hook 'fci-mode))
 
 
 ;; Do not write anything past this comment. This is where Emacs will
