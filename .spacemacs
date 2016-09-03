@@ -67,7 +67,7 @@ values."
    ;; This variable has no effect if Emacs is launched with the parameter
    ;; `--insecure' which forces the value of this variable to nil.
    ;; (default t)
-   dotspacemacs-elpa-https t
+   dotspacemacs-elpa-https nil
    ;; Maximum allowed time in seconds to contact an ELPA repository.
    dotspacemacs-elpa-timeout 5
    ;; If non nil then spacemacs will check for updates at startup
@@ -301,10 +301,12 @@ you should place your code here."
   (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 
   (global-set-key (kbd "C-<tab>") 'yas-expand)
- 
+  
   ;; Show 80-column marker
-  (add-hook 'prog-mode-hook 'fci-mode))
+  (add-hook 'prog-mode-hook 'fci-mode)
 
+  ;; Show git diffs
+  (add-hook 'prog-mode-hook 'diff-hl-mode))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
