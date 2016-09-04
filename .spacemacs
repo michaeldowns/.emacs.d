@@ -306,7 +306,13 @@ you should place your code here."
   (add-hook 'prog-mode-hook 'fci-mode)
 
   ;; Show git diffs
-  (add-hook 'prog-mode-hook 'diff-hl-mode))
+  (add-hook 'prog-mode-hook 'diff-hl-mode)
+
+  (setq-default
+   js-indent-level 2
+   js2-basic-offset 2
+   web-mode-markup-indent-offset 2
+   web-mode-code-indent-offset 2)))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
